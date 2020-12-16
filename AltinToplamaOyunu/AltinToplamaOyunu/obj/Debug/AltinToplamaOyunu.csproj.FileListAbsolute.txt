@@ -1,0 +1,30 @@
+C:\Users\Osman\Desktop\Oyun\AltinToplamaOyunu\AltinToplamaOyunu\bin\Debug\AltinToplamaOyunu.exe.config
+C:\Users\Osman\Desktop\Oyun\AltinToplamaOyunu\AltinToplamaOyunu\bin\Debug\AltinToplamaOyunu.exe
+C:\Users\Osman\Desktop\Oyun\AltinToplamaOyunu\AltinToplamaOyunu\bin\Debug\AltinToplamaOyunu.pdb
+C:\Users\Osman\Desktop\Oyun\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.csprojAssemblyReference.cache
+C:\Users\Osman\Desktop\Oyun\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.Properties.Resources.resources
+C:\Users\Osman\Desktop\Oyun\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.csproj.GenerateResource.cache
+C:\Users\Osman\Desktop\Oyun\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.csproj.CoreCompileInputs.cache
+C:\Users\Osman\Desktop\Oyun\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.exe
+C:\Users\Osman\Desktop\Oyun\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.pdb
+C:\Users\Osman\Desktop\Oyun\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.AnaForm.resources
+C:\Users\Osman\Desktop\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.csprojAssemblyReference.cache
+C:\Users\Osman\Desktop\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.AnaForm.resources
+C:\Users\Osman\Desktop\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.Properties.Resources.resources
+C:\Users\Osman\Desktop\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.csproj.GenerateResource.cache
+C:\Users\Osman\Desktop\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.csproj.CoreCompileInputs.cache
+C:\Users\Osman\Desktop\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.exe
+C:\Users\Osman\Desktop\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.pdb
+C:\Users\Osman\Desktop\AltinToplamaOyunu\AltinToplamaOyunu\bin\Debug\AltinToplamaOyunu.exe.config
+C:\Users\Osman\Desktop\AltinToplamaOyunu\AltinToplamaOyunu\bin\Debug\AltinToplamaOyunu.exe
+C:\Users\Osman\Desktop\AltinToplamaOyunu\AltinToplamaOyunu\bin\Debug\AltinToplamaOyunu.pdb
+D:\Yazılım\Ders Notları\yazlab\Yazlab 1. Proje\AltinToplamaOyunu\AltinToplamaOyunu\bin\Debug\AltinToplamaOyunu.exe.config
+D:\Yazılım\Ders Notları\yazlab\Yazlab 1. Proje\AltinToplamaOyunu\AltinToplamaOyunu\bin\Debug\AltinToplamaOyunu.exe
+D:\Yazılım\Ders Notları\yazlab\Yazlab 1. Proje\AltinToplamaOyunu\AltinToplamaOyunu\bin\Debug\AltinToplamaOyunu.pdb
+D:\Yazılım\Ders Notları\yazlab\Yazlab 1. Proje\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.csprojAssemblyReference.cache
+D:\Yazılım\Ders Notları\yazlab\Yazlab 1. Proje\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.AnaForm.resources
+D:\Yazılım\Ders Notları\yazlab\Yazlab 1. Proje\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.Properties.Resources.resources
+D:\Yazılım\Ders Notları\yazlab\Yazlab 1. Proje\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.csproj.GenerateResource.cache
+D:\Yazılım\Ders Notları\yazlab\Yazlab 1. Proje\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.csproj.CoreCompileInputs.cache
+D:\Yazılım\Ders Notları\yazlab\Yazlab 1. Proje\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.exe
+D:\Yazılım\Ders Notları\yazlab\Yazlab 1. Proje\AltinToplamaOyunu\AltinToplamaOyunu\obj\Debug\AltinToplamaOyunu.pdb

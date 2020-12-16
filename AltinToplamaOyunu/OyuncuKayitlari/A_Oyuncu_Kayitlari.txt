@@ -1,0 +1,105 @@
+Oyun Başladı...
+
+ 1. Tur
+
+Hedef belirlendi. Hedef X: 0 Y: 2
+Hedefe Olan birim uzaklık : 2
+Hedefteki altın miktari :10
+Hedef belirleme maliyeti : 5
+Hamle belirleme maliyeti : 5
+Oyuncu kalan altın miktari : 195
+Aşağı hareket etti : x: 0 y: 1
+Oyuncu kalan altın miktari : 195
+Hedefe ulaşıldı : x: 0 y: 2
+Altın Toplandı. Toplanan miktar : 10
+Oyuncu kalan altın miktari : 205
+Aşağı hareket etti : x: 0 y: 2
+Oyuncu kalan altın miktari : 205
+Hedef belirlendi. Hedef X: 2 Y: 6
+Hedefe Olan birim uzaklık : 6
+Hedefteki altın miktari :15
+Hedef belirleme maliyeti : 5
+Hamle belirleme maliyeti : 5
+Oyuncu kalan altın miktari : 200
+
+ 2. Tur
+
+Sağa hareket etti : x: 1 y: 2
+Oyuncu kalan altın miktari : 195
+Sağa hareket etti : x: 2 y: 2
+Oyuncu kalan altın miktari : 195
+Aşağı hareket etti : x: 2 y: 3
+Oyuncu kalan altın miktari : 195
+
+ 3. Tur
+
+Aşağı hareket etti : x: 2 y: 4
+Oyuncu kalan altın miktari : 190
+Aşağı hareket etti : x: 2 y: 5
+Oyuncu kalan altın miktari : 190
+Hedefe ulaşıldı : x: 2 y: 6
+Altın Toplandı. Toplanan miktar : 15
+Oyuncu kalan altın miktari : 205
+Aşağı hareket etti : x: 2 y: 6
+Oyuncu kalan altın miktari : 205
+Hedef belirlendi. Hedef X: 0 Y: 7
+Hedefe Olan birim uzaklık : 3
+Hedefteki altın miktari :5
+Hedef belirleme maliyeti : 5
+Hamle belirleme maliyeti : 5
+Oyuncu kalan altın miktari : 200
+
+ 4. Tur
+
+Sola hareket etti :x: 1 y: 6
+Oyuncu kalan altın miktari : 195
+Sola hareket etti :x: 0 y: 6
+Oyuncu kalan altın miktari : 195
+Hedefe ulaşıldı : x: 0 y: 7
+Altın Toplandı. Toplanan miktar : 5
+Oyuncu kalan altın miktari : 200
+Aşağı hareket etti : x: 0 y: 7
+Oyuncu kalan altın miktari : 200
+Hedef belirlendi. Hedef X: 0 Y: 8
+Hedefe Olan birim uzaklık : 1
+Hedefteki altın miktari :15
+Hedef belirleme maliyeti : 5
+Hamle belirleme maliyeti : 5
+Oyuncu kalan altın miktari : 195
+
+ 5. Tur
+
+Hedefe ulaşıldı : x: 0 y: 8
+Altın Toplandı. Toplanan miktar : 15
+Oyuncu kalan altın miktari : 205
+Aşağı hareket etti : x: 0 y: 8
+Oyuncu kalan altın miktari : 205
+Hedef belirlendi. Hedef X: 2 Y: 10
+Hedefe Olan birim uzaklık : 4
+Hedefteki altın miktari :10
+Hedef belirleme maliyeti : 5
+Hamle belirleme maliyeti : 5
+Oyuncu kalan altın miktari : 200
+
+ 6. Tur
+
+Sağa hareket etti : x: 1 y: 8
+Oyuncu kalan altın miktari : 195
+Sağa hareket etti : x: 2 y: 8
+Oyuncu kalan altın miktari : 195
+Aşağı hareket etti : x: 2 y: 9
+Oyuncu kalan altın miktari : 195
+
+ 7. Tur
+
+Hedefe ulaşıldı : x: 2 y: 10
+Altın Toplandı. Toplanan miktar : 10
+Oyuncu kalan altın miktari : 200
+Aşağı hareket etti : x: 2 y: 10
+Oyuncu kalan altın miktari : 200
+Hedef belirlendi. Hedef X: 6 Y: 10
+Hedefe Olan birim uzaklık : 4
+Hedefteki altın miktari :15
+Hedef belirleme maliyeti : 5
+Hamle belirleme maliyeti : 5
+Oyuncu kalan altın miktari : 195

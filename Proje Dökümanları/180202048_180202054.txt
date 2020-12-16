@@ -1,0 +1,1964 @@
+// Bu proje C# Form Uygulaması olarak yapılmıştır. Eğer Kaynak kodlarını yerleştirmek isterseniz : 
+// Proje Adı (namespace' i ) AltinToplamaOyunu olarak açmanız gerekmektedir.
+// Formumuzun ismi AnaForm olucaktır ve partial class olduğundan dolayı bu dosyadaki ilk parçası AnaFormun içine yapıştırılmalıdır.
+// Diğer parçasıda AnaForm.Designeer.cs classının içine yapıştırılmalıdır.
+
+
+// --------------------------------------AnaForm Partial Classın Bir Parçası----------------------------------------------
+
+public partial class AnaForm : Form
+    {
+        // Oyunumuzdaki genel sınıfların tanımlandığı yer
+        OyunAnaLabel oyunAnaLabel;
+        OyunBitisLabel oyunBitisLabel;
+
+        // Oyunda yer alan parametrelerin tanımlandığı yer
+        public static (int boyutX, int boyutY, int altinOrani, int gizliAltinOrani,
+        int baslangicAltinMiktari, int adimSayisi, int a_OyuncuHamleMaliyet,
+        int a_OyuncuHedefMaliyet, int b_OyuncuHamleMaliyet, int b_OyuncuHedefMaliyet,
+        int c_OyuncuHamleMaliyet, int c_OyuncuHedefMaliyet, int gizliAltinAcmaSayisi,
+        int d_OyuncuHamleMaliyet, int d_OyuncuHedefMaliyet) parametre;
+
+        public AnaForm()
+        {
+            InitializeComponent();
+            this.BackColor = Color.FromArgb(50, 50, 50);
+
+            // Parametrelere varsayılan degerler atanır
+            parametre = (20, 20, 20, 10, 200, 3, 5, 5, 5, 10, 5, 15, 2, 5, 20);
+        }
+
+        private void btnBasla_Click(object sender, EventArgs e)
+        {
+            // Başla tuşuna basıldığı zaman formun özellikleri değiştirilir
+            this.Controls.Remove(this.BaslangicPanel);
+            this.WindowState = FormWindowState.Maximized;
+            BaslangicAdimlari();
+        }
+
+        private void BaslangicAdimlari()
+        {
+            VarsayilanDegerControl();
+
+            // oyunAnaLabel yani oyunun görsel olarak gösterildiği kısım forma eklenir
+            oyunAnaLabel = new OyunAnaLabel(this.ClientSize.Height, this.ClientSize.Width);
+            oyunAnaLabel.VisibleChanged += OyunAnaLabel_VisibleChanged;
+            this.Controls.Add(oyunAnaLabel);
+        }
+
+        private void OyunAnaLabel_VisibleChanged(object sender, EventArgs e)
+        {
+            // oyun bittiği zaman oyunAnaLabel'ın visible kapatılır ve event tetiklenir
+            // sonrasında sonuç ekranı ortaya çıkartılır
+            this.Controls.Clear();
+            this.BackColor = Color.FromArgb(50, 50, 50);
+            this.WindowState = FormWindowState.Normal;
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Size = new Size(1020, 596);
+            oyunBitisLabel = new OyunBitisLabel(this.ClientSize.Width, this.ClientSize.Height, oyunAnaLabel);
+            oyunBitisLabel.Dock = DockStyle.Fill;
+            this.Controls.Add(oyunBitisLabel);
+        }
+
+        private void VarsayilanDegerControl()
+        {
+            // Her bir parametre için varsayılan degerler yerine yeni degerler
+            // girilip girilmediği kontrolü yapılmaktadır
+            ParametreKontrol(this.txtBoyutX.Text, ref parametre.boyutX);
+            ParametreKontrol(this.txtBoyutY.Text, ref parametre.boyutY);
+            ParametreKontrol(this.txtAltinOrani.Text, ref parametre.altinOrani);
+            ParametreKontrol(this.txtGizliAltinOrani.Text, ref parametre.gizliAltinOrani);
+            ParametreKontrol(this.txtBaslangicAltinMiktari.Text, ref parametre.baslangicAltinMiktari);
+            ParametreKontrol(this.txtAdimSayisiMiktari.Text, ref parametre.adimSayisi);
+            ParametreKontrol(this.txtAHamle.Text, ref parametre.a_OyuncuHamleMaliyet);
+            ParametreKontrol(this.txtAHedef.Text, ref parametre.a_OyuncuHedefMaliyet);
+            ParametreKontrol(this.txtBHamle.Text, ref parametre.b_OyuncuHamleMaliyet);
+            ParametreKontrol(this.txtBHedef.Text, ref parametre.b_OyuncuHedefMaliyet);
+            ParametreKontrol(this.txtCHamle.Text, ref parametre.c_OyuncuHamleMaliyet);
+            ParametreKontrol(this.txtCHedef.Text, ref parametre.c_OyuncuHedefMaliyet);
+            ParametreKontrol(this.txtgizliAltınAcmaSayisi.Text, ref parametre.gizliAltinAcmaSayisi);
+            ParametreKontrol(this.txtDHamle.Text, ref parametre.d_OyuncuHamleMaliyet);
+            ParametreKontrol(this.txtDHedef.Text, ref parametre.d_OyuncuHedefMaliyet);
+
+        }
+
+        private static void ParametreKontrol(string gelenDeger, ref int deger)
+        {
+            // Parametrelerin kontrolünü yapan algoritma
+            if (!(gelenDeger == ""))
+            {
+                int number;
+                if (int.TryParse(gelenDeger, out number))
+                {
+                    deger = number;
+                }
+            }
+        }
+
+        private void btnCıkıs_Click(object sender, EventArgs e)
+        {
+            // Oyundan çıkış yapılmaktadır
+            Application.Exit();
+        }
+    }
+
+
+// --------------------------------------AnaForm Partial Classın Diğer Parçası----------------------------------------------
+
+partial class AnaForm
+    {
+        /// <summary>
+        ///Gerekli tasarımcı değişkeni.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        ///Kullanılan tüm kaynakları temizleyin.
+        /// </summary>
+        ///<param name="disposing">yönetilen kaynaklar dispose edilmeliyse doğru; aksi halde yanlış.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer üretilen kod
+
+        /// <summary>
+        /// Tasarımcı desteği için gerekli metot - bu metodun 
+        ///içeriğini kod düzenleyici ile değiştirmeyin.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnaForm));
+            this.BaslangicPanel = new System.Windows.Forms.Panel();
+            this.txtgizliAltınAcmaSayisi = new System.Windows.Forms.TextBox();
+            this.lblgizliAltınAcmaSayisi = new System.Windows.Forms.Label();
+            this.txtDHedef = new System.Windows.Forms.TextBox();
+            this.txtDHamle = new System.Windows.Forms.TextBox();
+            this.lblDHedef = new System.Windows.Forms.Label();
+            this.lblDHamle = new System.Windows.Forms.Label();
+            this.txtCHedef = new System.Windows.Forms.TextBox();
+            this.txtCHamle = new System.Windows.Forms.TextBox();
+            this.lblCHedef = new System.Windows.Forms.Label();
+            this.lblCHamle = new System.Windows.Forms.Label();
+            this.txtBHedef = new System.Windows.Forms.TextBox();
+            this.txtBHamle = new System.Windows.Forms.TextBox();
+            this.lblBHedef = new System.Windows.Forms.Label();
+            this.lblBHamle = new System.Windows.Forms.Label();
+            this.txtAHedef = new System.Windows.Forms.TextBox();
+            this.txtAHamle = new System.Windows.Forms.TextBox();
+            this.lblAHedef = new System.Windows.Forms.Label();
+            this.lblAHamle = new System.Windows.Forms.Label();
+            this.lblDOyuncusu = new System.Windows.Forms.Label();
+            this.lblCOyuncusu = new System.Windows.Forms.Label();
+            this.lblBOyuncusu = new System.Windows.Forms.Label();
+            this.lblAOyuncusu = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.txtAdimSayisiMiktari = new System.Windows.Forms.TextBox();
+            this.txtBaslangicAltinMiktari = new System.Windows.Forms.TextBox();
+            this.txtGizliAltinOrani = new System.Windows.Forms.TextBox();
+            this.txtAltinOrani = new System.Windows.Forms.TextBox();
+            this.txtBoyutY = new System.Windows.Forms.TextBox();
+            this.txtBoyutX = new System.Windows.Forms.TextBox();
+            this.lblAdimSayisi = new System.Windows.Forms.Label();
+            this.lblbaslangicAltinMiktari = new System.Windows.Forms.Label();
+            this.lblGizliAltinOrani = new System.Windows.Forms.Label();
+            this.lblAltinOrani = new System.Windows.Forms.Label();
+            this.lblBoyutY = new System.Windows.Forms.Label();
+            this.lblBoyutX = new System.Windows.Forms.Label();
+            this.btnBasla = new System.Windows.Forms.Button();
+            this.btnCıkıs = new System.Windows.Forms.Button();
+            this.lblHeader = new System.Windows.Forms.Label();
+            this.BaslangicPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // BaslangicPanel
+            // 
+            this.BaslangicPanel.Controls.Add(this.txtgizliAltınAcmaSayisi);
+            this.BaslangicPanel.Controls.Add(this.lblgizliAltınAcmaSayisi);
+            this.BaslangicPanel.Controls.Add(this.txtDHedef);
+            this.BaslangicPanel.Controls.Add(this.txtDHamle);
+            this.BaslangicPanel.Controls.Add(this.lblDHedef);
+            this.BaslangicPanel.Controls.Add(this.lblDHamle);
+            this.BaslangicPanel.Controls.Add(this.txtCHedef);
+            this.BaslangicPanel.Controls.Add(this.txtCHamle);
+            this.BaslangicPanel.Controls.Add(this.lblCHedef);
+            this.BaslangicPanel.Controls.Add(this.lblCHamle);
+            this.BaslangicPanel.Controls.Add(this.txtBHedef);
+            this.BaslangicPanel.Controls.Add(this.txtBHamle);
+            this.BaslangicPanel.Controls.Add(this.lblBHedef);
+            this.BaslangicPanel.Controls.Add(this.lblBHamle);
+            this.BaslangicPanel.Controls.Add(this.txtAHedef);
+            this.BaslangicPanel.Controls.Add(this.txtAHamle);
+            this.BaslangicPanel.Controls.Add(this.lblAHedef);
+            this.BaslangicPanel.Controls.Add(this.lblAHamle);
+            this.BaslangicPanel.Controls.Add(this.lblDOyuncusu);
+            this.BaslangicPanel.Controls.Add(this.lblCOyuncusu);
+            this.BaslangicPanel.Controls.Add(this.lblBOyuncusu);
+            this.BaslangicPanel.Controls.Add(this.lblAOyuncusu);
+            this.BaslangicPanel.Controls.Add(this.label4);
+            this.BaslangicPanel.Controls.Add(this.pictureBox2);
+            this.BaslangicPanel.Controls.Add(this.txtAdimSayisiMiktari);
+            this.BaslangicPanel.Controls.Add(this.txtBaslangicAltinMiktari);
+            this.BaslangicPanel.Controls.Add(this.txtGizliAltinOrani);
+            this.BaslangicPanel.Controls.Add(this.txtAltinOrani);
+            this.BaslangicPanel.Controls.Add(this.txtBoyutY);
+            this.BaslangicPanel.Controls.Add(this.txtBoyutX);
+            this.BaslangicPanel.Controls.Add(this.lblAdimSayisi);
+            this.BaslangicPanel.Controls.Add(this.lblbaslangicAltinMiktari);
+            this.BaslangicPanel.Controls.Add(this.lblGizliAltinOrani);
+            this.BaslangicPanel.Controls.Add(this.lblAltinOrani);
+            this.BaslangicPanel.Controls.Add(this.lblBoyutY);
+            this.BaslangicPanel.Controls.Add(this.lblBoyutX);
+            this.BaslangicPanel.Controls.Add(this.btnBasla);
+            this.BaslangicPanel.Controls.Add(this.btnCıkıs);
+            this.BaslangicPanel.Controls.Add(this.lblHeader);
+            this.BaslangicPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BaslangicPanel.Location = new System.Drawing.Point(0, 0);
+            this.BaslangicPanel.Margin = new System.Windows.Forms.Padding(2);
+            this.BaslangicPanel.Name = "BaslangicPanel";
+            this.BaslangicPanel.Size = new System.Drawing.Size(991, 531);
+            this.BaslangicPanel.TabIndex = 0;
+            // 
+            // txtgizliAltınAcmaSayisi
+            // 
+            this.txtgizliAltınAcmaSayisi.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtgizliAltınAcmaSayisi.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtgizliAltınAcmaSayisi.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtgizliAltınAcmaSayisi.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtgizliAltınAcmaSayisi.Location = new System.Drawing.Point(500, 424);
+            this.txtgizliAltınAcmaSayisi.Margin = new System.Windows.Forms.Padding(2);
+            this.txtgizliAltınAcmaSayisi.Name = "txtgizliAltınAcmaSayisi";
+            this.txtgizliAltınAcmaSayisi.Size = new System.Drawing.Size(66, 24);
+            this.txtgizliAltınAcmaSayisi.TabIndex = 36;
+            // 
+            // lblgizliAltınAcmaSayisi
+            // 
+            this.lblgizliAltınAcmaSayisi.AutoSize = true;
+            this.lblgizliAltınAcmaSayisi.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblgizliAltınAcmaSayisi.Location = new System.Drawing.Point(387, 412);
+            this.lblgizliAltınAcmaSayisi.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblgizliAltınAcmaSayisi.Name = "lblgizliAltınAcmaSayisi";
+            this.lblgizliAltınAcmaSayisi.Size = new System.Drawing.Size(104, 36);
+            this.lblgizliAltınAcmaSayisi.TabIndex = 37;
+            this.lblgizliAltınAcmaSayisi.Text = "Gizli Altın \r\nAçma Sayisi :";
+            // 
+            // txtDHedef
+            // 
+            this.txtDHedef.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtDHedef.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDHedef.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtDHedef.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtDHedef.Location = new System.Drawing.Point(690, 376);
+            this.txtDHedef.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDHedef.Name = "txtDHedef";
+            this.txtDHedef.Size = new System.Drawing.Size(66, 24);
+            this.txtDHedef.TabIndex = 33;
+            // 
+            // txtDHamle
+            // 
+            this.txtDHamle.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtDHamle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDHamle.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtDHamle.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtDHamle.Location = new System.Drawing.Point(690, 348);
+            this.txtDHamle.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDHamle.Name = "txtDHamle";
+            this.txtDHamle.Size = new System.Drawing.Size(67, 24);
+            this.txtDHamle.TabIndex = 32;
+            // 
+            // lblDHedef
+            // 
+            this.lblDHedef.AutoSize = true;
+            this.lblDHedef.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblDHedef.Location = new System.Drawing.Point(578, 380);
+            this.lblDHedef.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblDHedef.Name = "lblDHedef";
+            this.lblDHedef.Size = new System.Drawing.Size(111, 18);
+            this.lblDHedef.TabIndex = 35;
+            this.lblDHedef.Text = "Hedef Maliyet :";
+            // 
+            // lblDHamle
+            // 
+            this.lblDHamle.AutoSize = true;
+            this.lblDHamle.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblDHamle.Location = new System.Drawing.Point(576, 353);
+            this.lblDHamle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblDHamle.Name = "lblDHamle";
+            this.lblDHamle.Size = new System.Drawing.Size(114, 18);
+            this.lblDHamle.TabIndex = 34;
+            this.lblDHamle.Text = "Hamle Maliyet :";
+            // 
+            // txtCHedef
+            // 
+            this.txtCHedef.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtCHedef.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtCHedef.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtCHedef.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtCHedef.Location = new System.Drawing.Point(500, 381);
+            this.txtCHedef.Margin = new System.Windows.Forms.Padding(2);
+            this.txtCHedef.Name = "txtCHedef";
+            this.txtCHedef.Size = new System.Drawing.Size(66, 24);
+            this.txtCHedef.TabIndex = 29;
+            // 
+            // txtCHamle
+            // 
+            this.txtCHamle.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtCHamle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtCHamle.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtCHamle.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtCHamle.Location = new System.Drawing.Point(500, 353);
+            this.txtCHamle.Margin = new System.Windows.Forms.Padding(2);
+            this.txtCHamle.Name = "txtCHamle";
+            this.txtCHamle.Size = new System.Drawing.Size(67, 24);
+            this.txtCHamle.TabIndex = 28;
+            // 
+            // lblCHedef
+            // 
+            this.lblCHedef.AutoSize = true;
+            this.lblCHedef.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblCHedef.Location = new System.Drawing.Point(387, 385);
+            this.lblCHedef.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblCHedef.Name = "lblCHedef";
+            this.lblCHedef.Size = new System.Drawing.Size(111, 18);
+            this.lblCHedef.TabIndex = 31;
+            this.lblCHedef.Text = "Hedef Maliyet :";
+            // 
+            // lblCHamle
+            // 
+            this.lblCHamle.AutoSize = true;
+            this.lblCHamle.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblCHamle.Location = new System.Drawing.Point(386, 358);
+            this.lblCHamle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblCHamle.Name = "lblCHamle";
+            this.lblCHamle.Size = new System.Drawing.Size(114, 18);
+            this.lblCHamle.TabIndex = 30;
+            this.lblCHamle.Text = "Hamle Maliyet :";
+            // 
+            // txtBHedef
+            // 
+            this.txtBHedef.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtBHedef.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBHedef.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtBHedef.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtBHedef.Location = new System.Drawing.Point(308, 385);
+            this.txtBHedef.Margin = new System.Windows.Forms.Padding(2);
+            this.txtBHedef.Name = "txtBHedef";
+            this.txtBHedef.Size = new System.Drawing.Size(66, 24);
+            this.txtBHedef.TabIndex = 25;
+            // 
+            // txtBHamle
+            // 
+            this.txtBHamle.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtBHamle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBHamle.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtBHamle.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtBHamle.Location = new System.Drawing.Point(308, 357);
+            this.txtBHamle.Margin = new System.Windows.Forms.Padding(2);
+            this.txtBHamle.Name = "txtBHamle";
+            this.txtBHamle.Size = new System.Drawing.Size(67, 24);
+            this.txtBHamle.TabIndex = 24;
+            // 
+            // lblBHedef
+            // 
+            this.lblBHedef.AutoSize = true;
+            this.lblBHedef.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblBHedef.Location = new System.Drawing.Point(196, 389);
+            this.lblBHedef.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblBHedef.Name = "lblBHedef";
+            this.lblBHedef.Size = new System.Drawing.Size(111, 18);
+            this.lblBHedef.TabIndex = 27;
+            this.lblBHedef.Text = "Hedef Maliyet :";
+            // 
+            // lblBHamle
+            // 
+            this.lblBHamle.AutoSize = true;
+            this.lblBHamle.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblBHamle.Location = new System.Drawing.Point(194, 362);
+            this.lblBHamle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblBHamle.Name = "lblBHamle";
+            this.lblBHamle.Size = new System.Drawing.Size(114, 18);
+            this.lblBHamle.TabIndex = 26;
+            this.lblBHamle.Text = "Hamle Maliyet :";
+            // 
+            // txtAHedef
+            // 
+            this.txtAHedef.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtAHedef.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtAHedef.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtAHedef.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtAHedef.Location = new System.Drawing.Point(123, 389);
+            this.txtAHedef.Margin = new System.Windows.Forms.Padding(2);
+            this.txtAHedef.Name = "txtAHedef";
+            this.txtAHedef.Size = new System.Drawing.Size(66, 24);
+            this.txtAHedef.TabIndex = 21;
+            // 
+            // txtAHamle
+            // 
+            this.txtAHamle.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtAHamle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtAHamle.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtAHamle.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtAHamle.Location = new System.Drawing.Point(123, 361);
+            this.txtAHamle.Margin = new System.Windows.Forms.Padding(2);
+            this.txtAHamle.Name = "txtAHamle";
+            this.txtAHamle.Size = new System.Drawing.Size(67, 24);
+            this.txtAHamle.TabIndex = 20;
+            // 
+            // lblAHedef
+            // 
+            this.lblAHedef.AutoSize = true;
+            this.lblAHedef.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblAHedef.Location = new System.Drawing.Point(10, 393);
+            this.lblAHedef.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblAHedef.Name = "lblAHedef";
+            this.lblAHedef.Size = new System.Drawing.Size(111, 18);
+            this.lblAHedef.TabIndex = 23;
+            this.lblAHedef.Text = "Hedef Maliyet :";
+            // 
+            // lblAHamle
+            // 
+            this.lblAHamle.AutoSize = true;
+            this.lblAHamle.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblAHamle.Location = new System.Drawing.Point(9, 366);
+            this.lblAHamle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblAHamle.Name = "lblAHamle";
+            this.lblAHamle.Size = new System.Drawing.Size(114, 18);
+            this.lblAHamle.TabIndex = 22;
+            this.lblAHamle.Text = "Hamle Maliyet :";
+            // 
+            // lblDOyuncusu
+            // 
+            this.lblDOyuncusu.AutoSize = true;
+            this.lblDOyuncusu.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblDOyuncusu.Location = new System.Drawing.Point(576, 323);
+            this.lblDOyuncusu.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblDOyuncusu.Name = "lblDOyuncusu";
+            this.lblDOyuncusu.Size = new System.Drawing.Size(99, 18);
+            this.lblDOyuncusu.TabIndex = 19;
+            this.lblDOyuncusu.Text = "D Oyuncusu :";
+            // 
+            // lblCOyuncusu
+            // 
+            this.lblCOyuncusu.AutoSize = true;
+            this.lblCOyuncusu.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblCOyuncusu.Location = new System.Drawing.Point(386, 323);
+            this.lblCOyuncusu.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblCOyuncusu.Name = "lblCOyuncusu";
+            this.lblCOyuncusu.Size = new System.Drawing.Size(99, 18);
+            this.lblCOyuncusu.TabIndex = 18;
+            this.lblCOyuncusu.Text = "C Oyuncusu :";
+            // 
+            // lblBOyuncusu
+            // 
+            this.lblBOyuncusu.AutoSize = true;
+            this.lblBOyuncusu.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblBOyuncusu.Location = new System.Drawing.Point(196, 323);
+            this.lblBOyuncusu.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblBOyuncusu.Name = "lblBOyuncusu";
+            this.lblBOyuncusu.Size = new System.Drawing.Size(98, 18);
+            this.lblBOyuncusu.TabIndex = 17;
+            this.lblBOyuncusu.Text = "B Oyuncusu :";
+            // 
+            // lblAOyuncusu
+            // 
+            this.lblAOyuncusu.AutoSize = true;
+            this.lblAOyuncusu.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblAOyuncusu.Location = new System.Drawing.Point(10, 323);
+            this.lblAOyuncusu.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblAOyuncusu.Name = "lblAOyuncusu";
+            this.lblAOyuncusu.Size = new System.Drawing.Size(97, 18);
+            this.lblAOyuncusu.TabIndex = 16;
+            this.lblAOyuncusu.Text = "A Oyuncusu :";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.label4.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.label4.Location = new System.Drawing.Point(241, 471);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(292, 34);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "Değeler varsayilan olarak sisteme girilmiştir.\r\nİsterseniz boş geçebilirsiniz.\r\n";
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(722, 20);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(2);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(248, 282);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 10;
+            this.pictureBox2.TabStop = false;
+            // 
+            // txtAdimSayisiMiktari
+            // 
+            this.txtAdimSayisiMiktari.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtAdimSayisiMiktari.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtAdimSayisiMiktari.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtAdimSayisiMiktari.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtAdimSayisiMiktari.Location = new System.Drawing.Point(194, 244);
+            this.txtAdimSayisiMiktari.Margin = new System.Windows.Forms.Padding(2);
+            this.txtAdimSayisiMiktari.Name = "txtAdimSayisiMiktari";
+            this.txtAdimSayisiMiktari.Size = new System.Drawing.Size(98, 24);
+            this.txtAdimSayisiMiktari.TabIndex = 6;
+            // 
+            // txtBaslangicAltinMiktari
+            // 
+            this.txtBaslangicAltinMiktari.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtBaslangicAltinMiktari.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBaslangicAltinMiktari.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtBaslangicAltinMiktari.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtBaslangicAltinMiktari.Location = new System.Drawing.Point(194, 215);
+            this.txtBaslangicAltinMiktari.Margin = new System.Windows.Forms.Padding(2);
+            this.txtBaslangicAltinMiktari.Name = "txtBaslangicAltinMiktari";
+            this.txtBaslangicAltinMiktari.Size = new System.Drawing.Size(98, 24);
+            this.txtBaslangicAltinMiktari.TabIndex = 5;
+            // 
+            // txtGizliAltinOrani
+            // 
+            this.txtGizliAltinOrani.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtGizliAltinOrani.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtGizliAltinOrani.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtGizliAltinOrani.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtGizliAltinOrani.Location = new System.Drawing.Point(194, 187);
+            this.txtGizliAltinOrani.Margin = new System.Windows.Forms.Padding(2);
+            this.txtGizliAltinOrani.Name = "txtGizliAltinOrani";
+            this.txtGizliAltinOrani.Size = new System.Drawing.Size(98, 24);
+            this.txtGizliAltinOrani.TabIndex = 4;
+            // 
+            // txtAltinOrani
+            // 
+            this.txtAltinOrani.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtAltinOrani.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtAltinOrani.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtAltinOrani.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtAltinOrani.Location = new System.Drawing.Point(194, 158);
+            this.txtAltinOrani.Margin = new System.Windows.Forms.Padding(2);
+            this.txtAltinOrani.Name = "txtAltinOrani";
+            this.txtAltinOrani.Size = new System.Drawing.Size(98, 24);
+            this.txtAltinOrani.TabIndex = 3;
+            // 
+            // txtBoyutY
+            // 
+            this.txtBoyutY.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtBoyutY.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBoyutY.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtBoyutY.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtBoyutY.Location = new System.Drawing.Point(194, 130);
+            this.txtBoyutY.Margin = new System.Windows.Forms.Padding(2);
+            this.txtBoyutY.Name = "txtBoyutY";
+            this.txtBoyutY.Size = new System.Drawing.Size(98, 24);
+            this.txtBoyutY.TabIndex = 2;
+            // 
+            // txtBoyutX
+            // 
+            this.txtBoyutX.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.txtBoyutX.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtBoyutX.Font = new System.Drawing.Font("Arial Narrow", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtBoyutX.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.txtBoyutX.Location = new System.Drawing.Point(194, 102);
+            this.txtBoyutX.Margin = new System.Windows.Forms.Padding(2);
+            this.txtBoyutX.Name = "txtBoyutX";
+            this.txtBoyutX.Size = new System.Drawing.Size(98, 24);
+            this.txtBoyutX.TabIndex = 1;
+            // 
+            // lblAdimSayisi
+            // 
+            this.lblAdimSayisi.AutoSize = true;
+            this.lblAdimSayisi.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblAdimSayisi.Location = new System.Drawing.Point(44, 249);
+            this.lblAdimSayisi.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblAdimSayisi.Name = "lblAdimSayisi";
+            this.lblAdimSayisi.Size = new System.Drawing.Size(148, 18);
+            this.lblAdimSayisi.TabIndex = 8;
+            this.lblAdimSayisi.Text = "Adım Sayısı Miktari :";
+            // 
+            // lblbaslangicAltinMiktari
+            // 
+            this.lblbaslangicAltinMiktari.AutoSize = true;
+            this.lblbaslangicAltinMiktari.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblbaslangicAltinMiktari.Location = new System.Drawing.Point(27, 220);
+            this.lblbaslangicAltinMiktari.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblbaslangicAltinMiktari.Name = "lblbaslangicAltinMiktari";
+            this.lblbaslangicAltinMiktari.Size = new System.Drawing.Size(167, 18);
+            this.lblbaslangicAltinMiktari.TabIndex = 7;
+            this.lblbaslangicAltinMiktari.Text = "Başlangıç Altın Miktari :";
+            // 
+            // lblGizliAltinOrani
+            // 
+            this.lblGizliAltinOrani.AutoSize = true;
+            this.lblGizliAltinOrani.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblGizliAltinOrani.Location = new System.Drawing.Point(74, 192);
+            this.lblGizliAltinOrani.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblGizliAltinOrani.Name = "lblGizliAltinOrani";
+            this.lblGizliAltinOrani.Size = new System.Drawing.Size(121, 18);
+            this.lblGizliAltinOrani.TabIndex = 6;
+            this.lblGizliAltinOrani.Text = "Gizli Altin Orani :";
+            // 
+            // lblAltinOrani
+            // 
+            this.lblAltinOrani.AutoSize = true;
+            this.lblAltinOrani.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblAltinOrani.Location = new System.Drawing.Point(104, 163);
+            this.lblAltinOrani.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblAltinOrani.Name = "lblAltinOrani";
+            this.lblAltinOrani.Size = new System.Drawing.Size(87, 18);
+            this.lblAltinOrani.TabIndex = 5;
+            this.lblAltinOrani.Text = "Altın Orani :";
+            // 
+            // lblBoyutY
+            // 
+            this.lblBoyutY.AutoSize = true;
+            this.lblBoyutY.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblBoyutY.Location = new System.Drawing.Point(87, 135);
+            this.lblBoyutY.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblBoyutY.Name = "lblBoyutY";
+            this.lblBoyutY.Size = new System.Drawing.Size(101, 18);
+            this.lblBoyutY.TabIndex = 4;
+            this.lblBoyutY.Text = "Oyun Alanı Y :";
+            // 
+            // lblBoyutX
+            // 
+            this.lblBoyutX.AutoSize = true;
+            this.lblBoyutX.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblBoyutX.Location = new System.Drawing.Point(87, 106);
+            this.lblBoyutX.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblBoyutX.Name = "lblBoyutX";
+            this.lblBoyutX.Size = new System.Drawing.Size(103, 18);
+            this.lblBoyutX.TabIndex = 3;
+            this.lblBoyutX.Text = "Oyun Alanı X :";
+            // 
+            // btnBasla
+            // 
+            this.btnBasla.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBasla.Font = new System.Drawing.Font("Arial", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnBasla.Location = new System.Drawing.Point(30, 470);
+            this.btnBasla.Margin = new System.Windows.Forms.Padding(2);
+            this.btnBasla.Name = "btnBasla";
+            this.btnBasla.Size = new System.Drawing.Size(98, 41);
+            this.btnBasla.TabIndex = 7;
+            this.btnBasla.Text = "Basla";
+            this.btnBasla.UseVisualStyleBackColor = true;
+            this.btnBasla.Click += new System.EventHandler(this.btnBasla_Click);
+            // 
+            // btnCıkıs
+            // 
+            this.btnCıkıs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCıkıs.Font = new System.Drawing.Font("Arial", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.btnCıkıs.Location = new System.Drawing.Point(132, 470);
+            this.btnCıkıs.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCıkıs.Name = "btnCıkıs";
+            this.btnCıkıs.Size = new System.Drawing.Size(98, 41);
+            this.btnCıkıs.TabIndex = 8;
+            this.btnCıkıs.Text = "Cıkıs";
+            this.btnCıkıs.UseVisualStyleBackColor = true;
+            this.btnCıkıs.Click += new System.EventHandler(this.btnCıkıs_Click);
+            // 
+            // lblHeader
+            // 
+            this.lblHeader.AutoSize = true;
+            this.lblHeader.Font = new System.Drawing.Font("Arial", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.lblHeader.Location = new System.Drawing.Point(24, 20);
+            this.lblHeader.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblHeader.Name = "lblHeader";
+            this.lblHeader.Size = new System.Drawing.Size(336, 37);
+            this.lblHeader.TabIndex = 0;
+            this.lblHeader.Text = "Altin Toplama Oyunu";
+            // 
+            // AnaForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.ClientSize = new System.Drawing.Size(991, 531);
+            this.Controls.Add(this.BaslangicPanel);
+            this.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Name = "AnaForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Altin Toplama Oyunu";
+            this.BaslangicPanel.ResumeLayout(false);
+            this.BaslangicPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Panel BaslangicPanel;
+        private System.Windows.Forms.Label lblHeader;
+        private System.Windows.Forms.Button btnCıkıs;
+        private System.Windows.Forms.Button btnBasla;
+        private System.Windows.Forms.Label lblAdimSayisi;
+        private System.Windows.Forms.Label lblbaslangicAltinMiktari;
+        private System.Windows.Forms.Label lblGizliAltinOrani;
+        private System.Windows.Forms.Label lblAltinOrani;
+        private System.Windows.Forms.Label lblBoyutY;
+        private System.Windows.Forms.Label lblBoyutX;
+        public System.Windows.Forms.TextBox txtAdimSayisiMiktari;
+        public System.Windows.Forms.TextBox txtBaslangicAltinMiktari;
+        public System.Windows.Forms.TextBox txtGizliAltinOrani;
+        public System.Windows.Forms.TextBox txtAltinOrani;
+        public System.Windows.Forms.TextBox txtBoyutY;
+        public System.Windows.Forms.TextBox txtBoyutX;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Label label4;
+        public System.Windows.Forms.TextBox txtDHedef;
+        public System.Windows.Forms.TextBox txtDHamle;
+        private System.Windows.Forms.Label lblDHedef;
+        private System.Windows.Forms.Label lblDHamle;
+        public System.Windows.Forms.TextBox txtCHedef;
+        public System.Windows.Forms.TextBox txtCHamle;
+        private System.Windows.Forms.Label lblCHedef;
+        private System.Windows.Forms.Label lblCHamle;
+        public System.Windows.Forms.TextBox txtBHedef;
+        public System.Windows.Forms.TextBox txtBHamle;
+        private System.Windows.Forms.Label lblBHedef;
+        private System.Windows.Forms.Label lblBHamle;
+        public System.Windows.Forms.TextBox txtAHedef;
+        public System.Windows.Forms.TextBox txtAHamle;
+        private System.Windows.Forms.Label lblAHedef;
+        private System.Windows.Forms.Label lblAHamle;
+        private System.Windows.Forms.Label lblDOyuncusu;
+        private System.Windows.Forms.Label lblCOyuncusu;
+        private System.Windows.Forms.Label lblBOyuncusu;
+        private System.Windows.Forms.Label lblAOyuncusu;
+        public System.Windows.Forms.TextBox txtgizliAltınAcmaSayisi;
+        private System.Windows.Forms.Label lblgizliAltınAcmaSayisi;
+    }
+
+// --------------------------------------Program Classı----------------------------------------------
+
+
+static class Program
+    {
+        /// <summary>
+        /// Uygulamanın ana girdi noktası.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new AnaForm());
+        }
+    }
+
+// --------------------------------------Taban Classı----------------------------------------------
+
+class Taban
+    {
+        private int tabanOlcegi;
+        private int startPositionX;
+        public List<List<Block>> grid;
+
+        public Taban(int tabanOlcegi, int tabanGenisligi)
+        {
+            this.grid = new List<List<Block>>();
+            this.startPositionX = (tabanGenisligi - tabanOlcegi) / 2;
+            this.tabanOlcegi = tabanOlcegi;
+
+            TabanOlustur();
+        }
+
+        // Oyunda Teorik olarak her biri block classından oluşan taban oluşturulmaktadır.
+        private void TabanOlustur()
+        {
+            int x = startPositionX,
+                y = (tabanOlcegi % AnaForm.parametre.boyutY) / 2,
+                width = tabanOlcegi / AnaForm.parametre.boyutX,
+                height = tabanOlcegi / AnaForm.parametre.boyutY;
+
+            for (int i = 0; i < AnaForm.parametre.boyutY; i++)
+            {
+                List<Block> blocks = new List<Block>();
+
+                for (int j = 0; j < AnaForm.parametre.boyutX; j++)
+                {
+                    Block block = new Block()
+                    {
+                        x = x,
+                        y = y,
+                        width = width,
+                        heigth = height,
+                    };
+                    blocks.Add(block);
+                    x += width;
+                }
+
+                grid.Add(blocks);
+                x = startPositionX;
+                y += height;
+            }
+        }
+    }
+
+// --------------------------------------Oyuncu Classı----------------------------------------------
+
+abstract class Oyuncu
+    {
+        // Her bir oyuncuya ait veriler değişkenler burda tutlmaktadır
+        // her bir oyuncu oyuncu classından türetilmektedir.
+
+        public Color oyuncuRengi;
+        public List<List<Block>> grid;
+        public Altin altin;
+        public GizliAltin gizliAltin;
+        public string oyuncuIsmi;
+        public (int x, int y) konum;
+        public (int x, int y) hedef;
+        public int oyuncuNumarasi;
+        public int adimSayisi;
+        public int baslangicAltinMiktari;
+        public int toplamAdimMiktari;
+        public int harcananAltinMiktari;
+        public int toplananAltinMiktari;
+        public int hamleMaliyet;
+        public int hedefMaliyet;
+        private int iterator;
+
+        public Oyuncu()
+        {
+            this.baslangicAltinMiktari = AnaForm.parametre.baslangicAltinMiktari;
+            this.adimSayisi = AnaForm.parametre.adimSayisi;
+            this.toplamAdimMiktari = 0;
+            this.harcananAltinMiktari = 0;
+            this.toplananAltinMiktari = 0;
+            this.iterator = 0;
+        }
+
+        // oyuncuların hedef belirleme işlmeleri farklılık gösterdiğinden dolayı
+        // abstract olarak tanımladık ve her bir oyuncu kendi classının iiçinde istediği
+        // gibi methodu doldurabilmektedir.
+
+        public abstract void hedefBelirle(List<Oyuncu> oyuncular);
+
+        // oyuncuların hareket işlemleri karmaşık bir yapıya sahiptir.
+        // ilk olarak hareket işleminde sol sağ yukarı ve aşşağıya gitme 
+        // kontrolleri yapılır oyuncuların sınır dışına çıkmaması için 
+        // önlem alınmıştır. oyuncular hedeflediği altına giderken
+        // geçtikleri altını almaması ve gizli altından geçerken açması sağlanmıştır
+        // oyuncular hedeflediği altına gidince alması da sağlanmıştır.
+
+        public void hareketET(Dosya dosya)
+        {
+            if (hedef.x - konum.x > 0)
+            {
+                sagaGit(dosya);
+            }
+            else if (hedef.x - konum.x < 0)
+            {
+                solaGit(dosya);
+            }
+            else if (hedef.y - konum.y > 0)
+            {
+                asagiGit(dosya);
+            }
+            else if (hedef.y - konum.y < 0) yukariGit(dosya);
+            toplamAdimMiktari++;
+        }
+
+        // üstünden geçilen her bir bloğun kontrolü yapılır
+
+        private int BlockKontrol(int konumX, int konumY, int nokta, Dosya dosya)
+        {
+            if (konumX == hedef.x && konumY == hedef.y)
+            {
+                altin.altinSayisi--;
+                toplananAltinMiktari += altin.degerMatris[hedef.y, hedef.x];
+                baslangicAltinMiktari += altin.degerMatris[hedef.y, hedef.x];
+
+                // hedefe ulaştığı zaman kayıt alıyor
+                dosya.DosyaYazdır("Hedefe ulaşıldı : " + "x: " + konumX + " y: " + konumY);
+                dosya.DosyaYazdır("Altın Toplandı. Toplanan miktar : " + altin.degerMatris[konumY, konumX]);
+                dosya.DosyaYazdır("Oyuncu kalan altın miktari : " + baslangicAltinMiktari);
+
+                adimSayisi = 0;
+                return 0;
+            }
+            else if (nokta == 2)
+            {
+                gizliAltin.gizliAltinSayisi--;
+                altin.altinSayisi++;
+
+                // gizli altını açtığında kayıt alıyor
+                dosya.DosyaYazdır("Gizli altın açıldı : " + "x: " + konumX + " y: " + konumY);
+                dosya.DosyaYazdır("Açılan gizli altının miktari : " + altin.degerMatris[konumY, konumX]);
+
+                return 1;
+            }
+            else
+            {
+                return nokta;
+            }
+        }
+
+        private void solaGit(Dosya dosya)
+        {
+            if (konum.x > 0)
+            {
+                altin.altinMatris[konum.y, konum.x] = iterator;
+                konum.x--;
+                iterator = BlockKontrol(konum.x, konum.y, altin.altinMatris[konum.y, konum.x], dosya);
+                altin.altinMatris[konum.y, konum.x] = oyuncuNumarasi;
+
+                // oyuncu sola gittiği zaman kayıt alıyor
+                dosya.DosyaYazdır("Sola hareket etti :" + "x: " + konum.x + " y: " + konum.y);
+                dosya.DosyaYazdır("Oyuncu kalan altın miktari : " + baslangicAltinMiktari);
+            }
+        }
+
+        private void sagaGit(Dosya dosya)
+        {
+            if (konum.x < 20)
+            {
+                altin.altinMatris[konum.y, konum.x] = iterator;
+                konum.x++;
+                iterator = BlockKontrol(konum.x, konum.y, altin.altinMatris[konum.y, konum.x], dosya);
+                altin.altinMatris[konum.y, konum.x] = oyuncuNumarasi;
+
+                // oyuncu sağa gittiği zaman kayıt alıyor
+                dosya.DosyaYazdır("Sağa hareket etti : " + "x: " + konum.x + " y: " + konum.y);
+                dosya.DosyaYazdır("Oyuncu kalan altın miktari : " + baslangicAltinMiktari);
+            }
+        }
+
+        private void yukariGit(Dosya dosya)
+        {
+            if (konum.y > 0)
+            {
+                altin.altinMatris[konum.y, konum.x] = iterator;
+                konum.y--;
+                iterator = BlockKontrol(konum.x, konum.y, altin.altinMatris[konum.y, konum.x], dosya);
+                altin.altinMatris[konum.y, konum.x] = oyuncuNumarasi;
+
+                // oyuncu yukarı gittiği zaman kayıt alıyor
+                dosya.DosyaYazdır("Yukari hareket etti : " + "x: " + konum.x + " y: " + konum.y);
+                dosya.DosyaYazdır("Oyuncu kalan altın miktari : " + baslangicAltinMiktari);
+            }
+        }
+
+        private void asagiGit(Dosya dosya)
+        {
+            if (konum.y < 20)
+            {
+                altin.altinMatris[konum.y, konum.x] = iterator;
+                konum.y++;
+                iterator = BlockKontrol(konum.x, konum.y, altin.altinMatris[konum.y, konum.x], dosya);
+                altin.altinMatris[konum.y, konum.x] = oyuncuNumarasi;
+
+                // oyuncu aşağı gittiği zaman kayıt alıyor
+                dosya.DosyaYazdır("Aşağı hareket etti : " + "x: " + konum.x + " y: " + konum.y);
+                dosya.DosyaYazdır("Oyuncu kalan altın miktari : " + baslangicAltinMiktari);
+            }
+        }
+    }
+
+// --------------------------------------OyunAnaLabel Classı----------------------------------------------
+
+class OyunAnaLabel : Label
+    {
+        // oyunAnaLabel da oyunda teorik olarak önceden tanımlanmış 
+        // hazırlanmış verilerin görselleştirilmesi çizdirilmesinden sorumlu classtır
+        // her bir oyuncu hareket ettiğinde ya da altın azaldığında haritayı tekrar günceller
+        public Taban taban;
+        public Altin altin;
+        public GizliAltin gizliAltin;
+        public List<Oyuncu> oyuncular;
+        public DispatcherTimer anaTimer;
+        private CizimYonetimi cizimYonetimi;
+        private List<Dosya> dosyalar;
+        private int hamleSirasi = 0;
+        private int tabanYuksekligi;
+        private int tabanGenisligi;
+        private int[] turlar;
+        private int turSayac = 0;
+
+        public OyunAnaLabel(int tabanYuksekligi, int tabanGenisligi)
+        {
+            this.turlar = new int[] { 1, 1, 1, 1 };
+            this.tabanGenisligi = tabanGenisligi;
+            this.tabanYuksekligi = tabanYuksekligi;
+
+            // oyunun taban kısmı teorik olarak oluşturulur
+            this.taban = new Taban(tabanYuksekligi, tabanGenisligi); 
+
+            // oyunun altin kısmı teorik olarak oluşturulur
+            this.altin = new Altin();
+
+            // oyunun gizliAltin kısmı teorik olarak oluşturulur
+            this.gizliAltin = new GizliAltin(altin);
+            altin.altinSayisi -= gizliAltin.gizliAltinSayisi;
+
+            // oyunda yer alan 4 farklı oyuncu bir listenin içinde polymorghism kullanılarak oluşturulur
+            this.oyuncular = oyuncular = new List<Oyuncu>()
+            {
+                { new A_Oyuncusu(altin, gizliAltin, taban.grid, 0, 0) },
+                { new B_Oyuncusu(altin, gizliAltin, taban.grid, 0, AnaForm.parametre.boyutX - 1) },
+                { new C_Oyuncusu(altin, gizliAltin, taban.grid, AnaForm.parametre.boyutY - 1, 0) },
+                { new D_Oyuncusu(altin, gizliAltin, taban.grid, AnaForm.parametre.boyutY - 1, AnaForm.parametre.boyutX - 1) },
+            };
+
+            // oyunda ki her oyuncu için kayıtlar tutulması için dosyalar oluşturulur
+            this.dosyalar = dosyalar = new List<Dosya>()
+            {
+                { new Dosya("A_Oyuncu_Kayitlari") },
+                { new Dosya("B_Oyuncu_Kayitlari") },
+                { new Dosya("C_Oyuncu_Kayitlari") },
+                { new Dosya("D_Oyuncu_Kayitlari") }
+            };
+
+            // oluşturulan dosyalara başlıklar eklenir
+            foreach (var dosya in dosyalar)
+            {
+                dosya.DosyaYazdır("Oyun Başladı...");
+            }
+
+            this.cizimYonetimi = new CizimYonetimi();
+            this.Paint += new PaintEventHandler(this.oyunAnaLabelCizdir);
+            this.Dock = DockStyle.Fill;
+
+            anaTimer = new DispatcherTimer();
+            anaTimer.Interval = new TimeSpan(0, 0, 0, 0, 400); // 400 Milliseconds
+            anaTimer.Tick += new EventHandler(this.anaTimer_Tick);
+
+            anaTimer.Start();
+        }
+
+        // oyunun oynanıcağı alanı oluşturur ve oyunla ilgili herhangi bir değişiklik
+        // olduğunda tekrar çizdirerek yeni halini çizdirir
+
+        public void oyunAnaLabelCizdir(object sender, PaintEventArgs args)
+        {
+            cizimYonetimi.tabanCiz(args, taban.grid);
+            cizimYonetimi.altinCiz(args, taban.grid, altin);
+            cizimYonetimi.gizliAltinCiz(args, taban.grid, altin);
+            foreach (var oyuncu in oyuncular)
+            {
+                cizimYonetimi.oyuncuCiz(oyuncu, args, taban.grid, oyuncu.oyuncuIsmi);
+                cizimYonetimi.hedefGostergeCiz(oyuncu, args, taban.grid);
+            }
+        }
+
+        // timer kullanrak oyunda 400 milisecond da çalışmasını sağladık ve
+        // oyundaki gerçekleşmesi gerekne her durumu ve adımı tek tek yazdık
+
+        public void anaTimer_Tick(object sender, EventArgs eventArgs)
+        {
+            // oyunun devam etmesi için gereken koşullar
+            if (altin.altinSayisi != 0 && (oyuncular[0].baslangicAltinMiktari != 0 ||
+                oyuncular[1].baslangicAltinMiktari != 0 || oyuncular[2].baslangicAltinMiktari != 0 ||
+                oyuncular[3].baslangicAltinMiktari != 0))
+            {
+
+                // her oyuncu için tur başı burasıdır ve tur başında yapılması gereken adımlar yapılır.
+                if (turSayac == 0)
+                {
+                    // her tur başında dosyaya tur bilgisi ile ilgili metin yazdırılır
+                    dosyalar[hamleSirasi].DosyaYazdır("\n " + turlar[hamleSirasi] + ". Tur\n");
+                    turlar[hamleSirasi]++;
+                    turSayac++;
+                }
+
+                hedefBelirlemeAsamasi();
+                this.Refresh();
+                hareketEtmeAsamasi();
+                this.Refresh();
+            }
+
+            // oyunun bitmesi için altınların bitmesi gerekir
+            else if (altin.altinSayisi == 0)
+            {
+                foreach (var dosya in dosyalar)
+                {
+                    dosya.DosyaYazdır("\nOyun Bitti...");
+                    dosya.streamWriter.Close();
+                    dosya.fs.Close();
+                }
+
+                this.Hide();
+                anaTimer.Stop();
+            }
+
+            // oyunun bitmesi için oyuncuların altınlarının bitmesi gerekir
+            else if (oyuncular[0].baslangicAltinMiktari == 0 && oyuncular[1].baslangicAltinMiktari == 0 &&
+                     oyuncular[2].baslangicAltinMiktari == 0 && oyuncular[3].baslangicAltinMiktari == 0)
+            {
+                foreach (var dosya in dosyalar)
+                {
+                    dosya.DosyaYazdır("\nOyun Bitti...");
+                    dosya.streamWriter.Close();
+                    dosya.fs.Close();
+                }
+
+                this.Hide();
+                anaTimer.Stop();
+            }
+        }
+
+        private void hedefBelirlemeAsamasi()
+        {
+            // oyuncunun hedefi yoksa ama altını varsa
+            if (altin.altinMatris[oyuncular[hamleSirasi].hedef.y, oyuncular[hamleSirasi].hedef.x] != 1 &&
+                oyuncular[hamleSirasi].baslangicAltinMiktari >= oyuncular[hamleSirasi].hedefMaliyet)
+            {
+                // hamle sırasi c oyuncusunda ise gizli altın açması sağlanır
+                if (oyuncular[hamleSirasi].oyuncuNumarasi == -3)
+                {
+                    C_Oyuncusu c_oyuncusu = oyuncular[hamleSirasi] as C_Oyuncusu;
+                    c_oyuncusu.gizliAltinAc();
+                    this.Refresh();
+                }
+
+                // hedef belirleme aşamasıdır
+                oyuncular[hamleSirasi].hedefBelirle(oyuncular);
+
+                // oyunculardan hedef maliyetinin düşürüldüğü yer
+                oyuncular[hamleSirasi].baslangicAltinMiktari -= oyuncular[hamleSirasi].hedefMaliyet;
+                oyuncular[hamleSirasi].harcananAltinMiktari += oyuncular[hamleSirasi].hedefMaliyet;
+
+                // oyuncu hedefe vardığında kayıt alır
+                dosyalar[hamleSirasi].DosyaYazdır("Hedef belirlendi. Hedef " + "X: " + oyuncular[hamleSirasi].hedef.x +
+                                                  " Y: " + oyuncular[hamleSirasi].hedef.y);
+                dosyalar[hamleSirasi].DosyaYazdır("Hedefe Olan birim uzaklık : " +
+                                                 (Math.Abs(oyuncular[hamleSirasi].konum.x - oyuncular[hamleSirasi].hedef.x) +
+                                                 Math.Abs(oyuncular[hamleSirasi].konum.y - oyuncular[hamleSirasi].hedef.y)));
+
+                dosyalar[hamleSirasi].DosyaYazdır("Hedefteki altın miktari :" +
+                                                 altin.degerMatris[oyuncular[hamleSirasi].hedef.y, oyuncular[hamleSirasi].hedef.x]);
+                dosyalar[hamleSirasi].DosyaYazdır("Hedef belirleme maliyeti : " + oyuncular[hamleSirasi].hedefMaliyet);
+                dosyalar[hamleSirasi].DosyaYazdır("Hamle belirleme maliyeti : " + oyuncular[hamleSirasi].hamleMaliyet);
+                dosyalar[hamleSirasi].DosyaYazdır("Oyuncu kalan altın miktari : " + oyuncular[hamleSirasi].baslangicAltinMiktari);
+
+                this.Refresh();
+                Thread.Sleep(400);
+            }
+
+            // oyuncunun hedefi ve altını yoksa
+            else if (altin.altinMatris[oyuncular[hamleSirasi].hedef.y, oyuncular[hamleSirasi].hedef.x] != 1
+                     && oyuncular[hamleSirasi].baslangicAltinMiktari < oyuncular[hamleSirasi].hedefMaliyet)
+            {
+
+                dosyalar[hamleSirasi].DosyaYazdır("Oyuncunun altını bittiğinden dolayı hedef belirleyemez");
+
+                // hamle sırası diğer oyuncuya verilir ve hedef olarak kendini gösterir
+                oyuncular[hamleSirasi].hedef = (oyuncular[hamleSirasi].konum.x, oyuncular[hamleSirasi].konum.y);
+
+                if (hamleSirasi < 3)
+                {
+                    hamleSirasi++;
+                }
+
+                else
+                {
+                    hamleSirasi = 0;
+                }
+            }
+        }
+
+        private void hareketEtmeAsamasi()
+        {
+            // oyuncunun bir hedefi varsa eğer öyle hareket edebilir
+            if (altin.altinMatris[oyuncular[hamleSirasi].hedef.y, oyuncular[hamleSirasi].hedef.x] == 1)
+            {
+                if (oyuncular[hamleSirasi].baslangicAltinMiktari >= oyuncular[hamleSirasi].hamleMaliyet)
+                {
+                    // oyuncunun adım sayisi varsa
+                    if (oyuncular[hamleSirasi].adimSayisi > 0)
+                    {
+                        // hareket etme işlemi gerçekleşmektedir. 
+                        oyuncular[hamleSirasi].hareketET(dosyalar[hamleSirasi]);
+
+                        if (oyuncular[hamleSirasi].adimSayisi != 0)
+                        {
+                            oyuncular[hamleSirasi].adimSayisi--;
+                        }
+
+                        this.Refresh();
+                    }
+
+                    // oyuncunun adım sayisi bittiyse ve tur bitiminin olduğu yer
+                    else if (oyuncular[hamleSirasi].adimSayisi == 0)
+                    {
+                        // tur bitiminde oyuncudan hamle maliyeti kesilir
+                        oyuncular[hamleSirasi].baslangicAltinMiktari -= oyuncular[hamleSirasi].hamleMaliyet;
+                        oyuncular[hamleSirasi].harcananAltinMiktari += oyuncular[hamleSirasi].hamleMaliyet;
+
+                        // adim sayisini tekrardan sıfırlayıp bir diğer oyuncuya geçer hamle sırası
+                        oyuncular[hamleSirasi].adimSayisi = AnaForm.parametre.adimSayisi;
+
+                        if (hamleSirasi < 3)
+                        {
+                            hamleSirasi++;
+                        }
+
+                        else
+                        {
+                            hamleSirasi = 0;
+                        }
+
+                        turSayac = 0;
+                    }
+                }
+
+                // oyunucunun parası bittiyse 
+                else if (oyuncular[hamleSirasi].baslangicAltinMiktari < oyuncular[hamleSirasi].hamleMaliyet)
+                {
+                    Console.WriteLine("osman");
+                    dosyalar[hamleSirasi].DosyaYazdır("Oyuncunun altını bittiğinden dolayı hareket edemez");
+
+                    // altın miktarını 0 layıp hedef olarak oyuncunun kendi konumunu gösterir
+                    oyuncular[hamleSirasi].baslangicAltinMiktari = 0;
+                    oyuncular[hamleSirasi].hedef = (oyuncular[hamleSirasi].konum.x, oyuncular[hamleSirasi].konum.y);
+
+                    this.Refresh();
+
+                    if (hamleSirasi < 3)
+                    {
+                        hamleSirasi++;
+                    }
+
+                    else
+                    {
+                        hamleSirasi = 0;
+                    }
+                }
+            }
+        }
+    }
+
+// --------------------------------------OyunBitisLabel Classı----------------------------------------------
+
+class OyunBitisLabel : Label
+    {
+        // oyun bittikten sonra bir tablo şeklinde toplam adim sayisi, harcanan altin sayisi,
+        // kasadaki altin sayisi, toplanan altın sayısı gösterilmektedir.
+        private OyunAnaLabel oyunAnaLabel;
+        private int tabanGenisligi;
+        private int tabanYuksekligi;
+
+        public OyunBitisLabel(int tabanGenisligi, int tabanYuksekligi, OyunAnaLabel oyunAnaLabel)
+        {
+            this.oyunAnaLabel = oyunAnaLabel;
+            this.tabanGenisligi = tabanGenisligi;
+            this.tabanYuksekligi = tabanYuksekligi;
+
+            OyunBitisLabelComponentOlustur();
+        }
+
+        private void OyunBitisLabelComponentOlustur()
+        {
+            BaslikOlustur();
+
+            OyuncuIsimleriOlustur("A Oyuncusu", 250, 150, Color.Tomato);
+            OyuncuIsimleriOlustur("B Oyuncusu", 400, 150, Color.Green);
+            OyuncuIsimleriOlustur("C Oyuncusu", 550, 150, Color.DodgerBlue);
+            OyuncuIsimleriOlustur("D Oyuncusu", 700, 150, Color.BlueViolet);
+
+            KategoriIsimOlustur("Toplam Adim Sayisi :", 0, 200);
+            KategoriIsimOlustur("Harcanan Altin Miktari :", 0, 250);
+            KategoriIsimOlustur("Kasadaki Altin Miktari :", 0, 300);
+            KategoriIsimOlustur("Toplanan Altin Miktari :", 0, 350);
+
+            ToplamAdimSayisiOlustur(oyunAnaLabel.oyuncular[0].toplamAdimMiktari, 250, 200, Color.Tomato);
+            ToplamAdimSayisiOlustur(oyunAnaLabel.oyuncular[1].toplamAdimMiktari, 400, 200, Color.Green);
+            ToplamAdimSayisiOlustur(oyunAnaLabel.oyuncular[2].toplamAdimMiktari, 550, 200, Color.DodgerBlue);
+            ToplamAdimSayisiOlustur(oyunAnaLabel.oyuncular[3].toplamAdimMiktari, 700, 200, Color.BlueViolet);
+
+            HarcananAltinMiktariOlustur(oyunAnaLabel.oyuncular[0].harcananAltinMiktari, 250, 250, Color.Tomato);
+            HarcananAltinMiktariOlustur(oyunAnaLabel.oyuncular[1].harcananAltinMiktari, 400, 250, Color.Green);
+            HarcananAltinMiktariOlustur(oyunAnaLabel.oyuncular[2].harcananAltinMiktari, 550, 250, Color.DodgerBlue);
+            HarcananAltinMiktariOlustur(oyunAnaLabel.oyuncular[3].harcananAltinMiktari, 700, 250, Color.BlueViolet);
+
+            KasadakiAltinMiktariOlustur(oyunAnaLabel.oyuncular[0].baslangicAltinMiktari, 250, 300, Color.Tomato);
+            KasadakiAltinMiktariOlustur(oyunAnaLabel.oyuncular[1].baslangicAltinMiktari, 400, 300, Color.Green);
+            KasadakiAltinMiktariOlustur(oyunAnaLabel.oyuncular[2].baslangicAltinMiktari, 550, 300, Color.DodgerBlue);
+            KasadakiAltinMiktariOlustur(oyunAnaLabel.oyuncular[3].baslangicAltinMiktari, 700, 300, Color.BlueViolet);
+
+            ToplananAltinMiktariOlustur(oyunAnaLabel.oyuncular[0].toplananAltinMiktari, 250, 350, Color.Tomato);
+            ToplananAltinMiktariOlustur(oyunAnaLabel.oyuncular[1].toplananAltinMiktari, 400, 350, Color.Green);
+            ToplananAltinMiktariOlustur(oyunAnaLabel.oyuncular[2].toplananAltinMiktari, 550, 350, Color.DodgerBlue);
+            ToplananAltinMiktariOlustur(oyunAnaLabel.oyuncular[3].toplananAltinMiktari, 700, 350, Color.BlueViolet);
+
+            TekrarOynaButtonuOlustur();
+            CıkısButtonuOlustur();
+        }
+
+        private void BaslikOlustur()
+        {
+            Label label = new Label();
+            label.Size = new Size(tabanGenisligi, tabanYuksekligi / 6);
+            label.Location = new Point(0, 0);
+            label.Font = new Font("Arial", 25, FontStyle.Bold);
+            label.TextAlign = ContentAlignment.MiddleCenter;
+            label.Text = "Oyun Bitti...";
+            this.Controls.Add(label);
+        }
+
+        private void OyuncuIsimleriOlustur(string metin, int x, int y, Color color)
+        {
+            Label label = new Label();
+            label.Size = new Size(150, 50);
+            label.Location = new Point(x, y);
+            label.Text = metin;
+            label.Font = new Font("Arial", 15, FontStyle.Bold);
+            label.TextAlign = ContentAlignment.MiddleCenter;
+            label.ForeColor = color;
+            this.Controls.Add(label);
+        }
+
+        private void KategoriIsimOlustur(string metin, int x, int y)
+        {
+            Label label = new Label();
+            label.Size = new Size(250, 50);
+            label.Location = new Point(x, y);
+            label.Text = metin;
+            label.Font = new Font("Arial", 14, FontStyle.Bold);
+            label.TextAlign = ContentAlignment.MiddleRight;
+            this.Controls.Add(label);
+        }
+
+        private void ToplamAdimSayisiOlustur(int metin, int x, int y, Color color)
+        {
+            Label label = new Label();
+            label.Size = new Size(150, 50);
+            label.Location = new Point(x, y);
+            label.Text = metin.ToString();
+            label.Font = new Font("Arial", 15, FontStyle.Bold);
+            label.TextAlign = ContentAlignment.MiddleCenter;
+            label.ForeColor = color;
+            this.Controls.Add(label);
+        }
+
+        private void HarcananAltinMiktariOlustur(int metin, int x, int y, Color color)
+        {
+            Label label = new Label();
+            label.Size = new Size(150, 50);
+            label.Location = new Point(x, y);
+            label.Text = metin.ToString();
+            label.Font = new Font("Arial", 15, FontStyle.Bold);
+            label.TextAlign = ContentAlignment.MiddleCenter;
+            label.ForeColor = color;
+            this.Controls.Add(label);
+        }
+
+        private void KasadakiAltinMiktariOlustur(int metin, int x, int y, Color color)
+        {
+            Label label = new Label();
+            label.Size = new Size(150, 50);
+            label.Location = new Point(x, y);
+            label.Text = metin.ToString();
+            label.Font = new Font("Arial", 15, FontStyle.Bold);
+            label.TextAlign = ContentAlignment.MiddleCenter;
+            label.ForeColor = color;
+            this.Controls.Add(label);
+        }
+
+        private void ToplananAltinMiktariOlustur(int metin, int x, int y, Color color)
+        {
+            Label label = new Label();
+            label.Size = new Size(150, 50);
+            label.Location = new Point(x, y);
+            label.Text = metin.ToString();
+            label.Font = new Font("Arial", 15, FontStyle.Bold);
+            label.TextAlign = ContentAlignment.MiddleCenter;
+            label.ForeColor = color;
+            this.Controls.Add(label);
+        }
+
+        private void TekrarOynaButtonuOlustur()
+        {
+            Button button = new Button();
+            button.FlatStyle = FlatStyle.Flat;
+            button.Font = new Font("Arial", 16F, FontStyle.Regular);
+            button.Location = new Point(50, 450);
+            button.Size = new Size(200, 50);
+            button.Text = "Yeniden Başlat";
+            button.UseVisualStyleBackColor = true;
+            button.Click += new System.EventHandler(this.yenidenBaslat );
+            this.Controls.Add(button);
+        }
+
+        private void CıkısButtonuOlustur()
+        {
+            Button button = new Button();
+            button.FlatStyle = FlatStyle.Flat;
+            button.Font = new Font("Arial", 16F, FontStyle.Regular);
+            button.Location = new Point(300, 450);
+            button.Size = new Size(200, 50);
+            button.Text = "Çıkış Yap";
+            button.UseVisualStyleBackColor = true;
+            button.Click += new System.EventHandler(this.cıkısYap);
+            this.Controls.Add(button);
+        }
+
+        private void cıkısYap(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void yenidenBaslat(object sender, EventArgs e)
+        {
+            Application.Restart();
+        }
+    }
+
+// --------------------------------------GizliAltin Classı----------------------------------------------
+
+class GizliAltin : Altin
+    {
+        public int gizliAltinSayisi;
+        private Altin altin;
+        public GizliAltin(Altin altin)
+        {
+            this.altin = altin;
+            gizliAltinSayisi = altin.altinSayisi * AnaForm.parametre.gizliAltinOrani / 100;
+
+            gizliAltinOlustur(gizliAltinSayisi);
+        }
+
+        // Altın matrisi oluşturulduktan sonra o matrisde altınların bazılarını kapatarak
+        // gizli altın oluşturulmaktadır.
+        private void gizliAltinOlustur(int gizliAltinSayisi)
+        {
+            int gizliAltinSayac = 0;
+            
+            while (true)
+            {
+                int x = 0 + random.Next(AnaForm.parametre.boyutY);
+                int y = 0 + random.Next(AnaForm.parametre.boyutX);
+
+                if ((altin.altinMatris[x, y] == 1) && (gizliAltinSayac != gizliAltinSayisi))
+                {
+                    altin.altinMatris[x, y] = 2;
+                    gizliAltinSayac++;
+                }
+                else if (gizliAltinSayac == gizliAltinSayisi)
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+// --------------------------------------Dosya Classı----------------------------------------------
+
+class Dosya
+    {
+        string dosyaUzantisi;
+        public FileStream fs;
+        public StreamWriter streamWriter;
+
+        // Dosyaya yazdırma işlerinin yapıldığı kısımdır
+        // dosya sürekli açık tutulur ve kayıt alınması sağlanır
+        // oyun bittiği zaman dosya kapatılır
+        public Dosya(string dosyaAdi)
+        {
+            dosyaUzantisi = "..\\..\\..\\OyuncuKayitlari\\" + dosyaAdi + ".txt";
+            fs = new FileStream(dosyaUzantisi, FileMode.Create, FileAccess.Write);
+            streamWriter = new StreamWriter(fs);
+        }
+
+        public void DosyaYazdır(string metin)
+        {
+            if (File.Exists(dosyaUzantisi))
+            {
+                streamWriter.WriteLine(metin);
+                streamWriter.Flush();
+            }
+        }
+    }
+
+// --------------------------------------CizimYonetimi Classı----------------------------------------------
+
+ class CizimYonetimi
+    {
+        // Oyundaki her bloğun çizdirilmesi için kullanılır
+        private void blockCizdir(PaintEventArgs g, Color color, Block block)
+        {
+            block.rectangle = new Rectangle(block.x, block.y, block.width, block.heigth);
+            g.Graphics.DrawRectangle(new Pen(color, 2), block.rectangle);
+        }
+
+        // Oyundaki her bloğun içinin boyanması için kullanılır
+        private void blockBoya(PaintEventArgs g, Color color, Block block, string deger = "degerYok")
+        {
+            if (deger == "degerYok")
+            {
+                g.Graphics.FillRectangle(new SolidBrush(color), block.rectangle);
+            }
+            else
+            {
+                g.Graphics.FillRectangle(new SolidBrush(color), block.rectangle);
+                g.Graphics.DrawString(deger,
+                                      new Font("Arial", 10),
+                                      new SolidBrush(Color.Black),
+                                      block.rectangle,
+                                      new StringFormat()
+                                      {
+                                          Alignment = StringAlignment.Center,
+                                          LineAlignment = StringAlignment.Center
+                                      });
+            }
+        }
+
+        // oyundaki her biri bir block olan tabanın çizdirilmesi yapılır
+        public void tabanCiz(PaintEventArgs g, List<List<Block>> grids)
+        {
+            foreach (List<Block> grid in grids)
+            {
+                foreach (Block block in grid)
+                {
+                    blockCizdir(g, Color.White, block);
+                }
+            }
+        }
+
+        // oyunda teorik olarak yerleştirilen altınlar daha sonrasında
+        // görünür kılınması için burda çizilmektedir.
+        public void altinCiz(PaintEventArgs args, List<List<Block>> grid, Altin altin)
+        {
+            for (int i = 0; i < AnaForm.parametre.boyutY; i++)
+            {
+                for (int j = 0; j < AnaForm.parametre.boyutX; j++)
+                {
+                    if (altin.altinMatris[i, j] == 1)
+                    {
+                        blockBoya(args, Color.Yellow, grid[i][j], altin.degerMatris[i, j].ToString());
+                    }
+                }
+            }
+        }
+
+        // ooyundaki her bir gizli altının çizdirilme işlemi yapılmaktadır
+        public void gizliAltinCiz(PaintEventArgs args, List<List<Block>> grid, Altin altin)
+        {
+            for (int i = 0; i < AnaForm.parametre.boyutY; i++)
+            {
+                for (int j = 0; j < AnaForm.parametre.boyutX; j++)
+                {
+                    if (altin.altinMatris[i, j] == 2)
+                    {
+                        blockBoya(args, Color.Orange, grid[i][j], altin.degerMatris[i, j].ToString());
+                    }
+                }
+            }
+        }
+
+        // her bir oyuncunun çizidirilme işlemini gerçekleştirmektedir.
+        public void oyuncuCiz(Oyuncu oyuncu, PaintEventArgs args, List<List<Block>> grid, string name)
+        {
+            blockBoya(args, oyuncu.oyuncuRengi, grid[oyuncu.konum.y][oyuncu.konum.x], name);
+        }
+
+        // her bir oyuncu hedef gösterdikten sonra oyunda hedefin hangisi olduğu
+        // gösterilmesi için çizilmektedir.
+        public void hedefGostergeCiz(Oyuncu oyuncu, PaintEventArgs args, List<List<Block>> grid)
+        {
+            blockCizdir(args, oyuncu.oyuncuRengi, grid[oyuncu.hedef.y][oyuncu.hedef.x]);
+        }
+    }
+
+// --------------------------------------D_Oyuncu Classı----------------------------------------------
+
+ class D_Oyuncusu : Oyuncu
+    {
+        public D_Oyuncusu(Altin altin, GizliAltin gizliAltin, List<List<Block>> grid, int konumY, int konumX)
+        {
+            this.oyuncuRengi = Color.BlueViolet;
+            this.altin = altin;
+            this.gizliAltin = gizliAltin;
+            this.grid = grid;
+            this.konum = (konumX, konumY);
+            this.hedef = (konumX, konumY);
+            this.hamleMaliyet = AnaForm.parametre.d_OyuncuHamleMaliyet;
+            this.hedefMaliyet = AnaForm.parametre.d_OyuncuHedefMaliyet;
+            this.oyuncuNumarasi = -4;
+            this.oyuncuIsmi = "D";
+        }
+
+        // D oyuncusuna ait hedef belirleme işlemi yazılmıştır
+        public override void hedefBelirle(List<Oyuncu> oyuncular)
+        {
+            List<(int hedefX, int hedefY, int maliyet)> hedefler;
+            hedefler = new List<(int hedefX, int hedefY, int maliyet)>();
+
+            for (int i = 0; i < AnaForm.parametre.boyutY; i++)
+            {
+                for (int j = 0; j < AnaForm.parametre.boyutX; j++)
+                {
+                    if (altin.altinMatris[i, j] == 1)
+                    {
+                        int kontrol = 0;
+                        foreach (var oyuncu in oyuncular)
+                        {
+                            if (oyuncu.hedef.x == j && oyuncu.hedef.y == i && oyuncu.oyuncuNumarasi != -4)
+                            {
+                                int konum1 = Math.Abs(i - this.konum.y) + Math.Abs(j - this.konum.x);
+                                int konum2 = Math.Abs(i - oyuncu.konum.y) + Math.Abs(j - oyuncu.konum.x);
+                                if (konum1 > konum2)
+                                {
+                                    kontrol = 1;
+                                }
+                            }
+                        }
+
+                        if (kontrol == 0)
+                        {
+                            int deger = (Math.Abs(i - konum.y) + Math.Abs(j - konum.x)) * hamleMaliyet;
+                            hedefler.Add((j, i, altin.degerMatris[i, j] - deger));
+                        }
+                    }
+                }
+            }
+
+            double enBuyuk = Double.NegativeInfinity;
+
+            foreach ((int hedefX, int hedefY, int deger) hedef in hedefler)
+            {
+                if (enBuyuk < hedef.deger)
+                {
+                    enBuyuk = hedef.deger;
+                    this.hedef = (hedef.hedefX, hedef.hedefY);
+                }
+            }
+        }
+    }
+
+// --------------------------------------C_Oyuncu Classı----------------------------------------------
+
+class C_Oyuncusu : Oyuncu
+    {
+        public C_Oyuncusu(Altin altin, GizliAltin gizliAltin, List<List<Block>> grid, int konumY, int konumX)
+        {
+            this.oyuncuRengi = Color.DodgerBlue;
+            this.altin = altin;
+            this.gizliAltin = gizliAltin;
+            this.grid = grid;
+            this.konum = (konumX, konumY);
+            this.hedef = (konumX, konumY);
+            this.hamleMaliyet = AnaForm.parametre.c_OyuncuHamleMaliyet;
+            this.hedefMaliyet = AnaForm.parametre.c_OyuncuHedefMaliyet;
+            this.oyuncuNumarasi = -3;
+            this.oyuncuIsmi = "C";
+        }
+
+        // C oyuncusuna ait hedef belirleme işlemi yazılmıştır
+        public override void hedefBelirle(List<Oyuncu> oyuncular)
+        {
+            List<(int hedefX, int hedefY, int maliyet)> hedefler;
+            hedefler = new List<(int hedefX, int hedefY, int maliyet)>();
+
+            for (int i = 0; i < AnaForm.parametre.boyutY; i++)
+            {
+                for (int j = 0; j < AnaForm.parametre.boyutX; j++)
+                {
+                    if (altin.altinMatris[i, j] == 1)
+                    {
+                        int deger = (Math.Abs(i - konum.y) + Math.Abs(j - konum.x)) * hamleMaliyet;
+                        hedefler.Add((j, i, altin.degerMatris[i, j] - deger));
+                    }
+                }
+            }
+
+            double enBuyuk = Double.NegativeInfinity;
+
+            foreach ((int hedefX, int hedefY, int deger) hedef in hedefler)
+            {
+                if (enBuyuk < hedef.deger)
+                {
+                    enBuyuk = hedef.deger;
+                    this.hedef = (hedef.hedefX, hedef.hedefY);
+                }
+            }
+
+            hedefler.Clear();
+        }
+
+        public void gizliAltinAc()
+        {
+            List<(int hedefX, int hedefY, double Uzaklik)> gizliAltinlar;
+            gizliAltinlar = new List<(int hedefX, int hedefY, double Uzaklik)>();
+
+            for (int i = 0; i < AnaForm.parametre.boyutY; i++)
+            {
+                for (int j = 0; j < AnaForm.parametre.boyutX; j++)
+                { 
+                    if (altin.altinMatris[i, j] == 2)
+                    {
+                        gizliAltinlar.Add((j, i, Math.Sqrt(Math.Pow(Math.Abs(j - konum.x), 2) +
+                                                           Math.Pow(Math.Abs(i - konum.y), 2))));
+                    }
+                }
+            }
+
+
+            for (int i = 0; i < AnaForm.parametre.gizliAltinAcmaSayisi; i++)
+            {
+                double enKucuk = Double.PositiveInfinity;
+                int x = konum.x, y = konum.y, index = -1;
+                for (int j = 0; j < gizliAltinlar.Count; j++)
+                {
+                    if (enKucuk > gizliAltinlar[j].Uzaklik)
+                    {
+                        enKucuk = gizliAltinlar[j].Uzaklik;
+                        x = gizliAltinlar[j].hedefX;
+                        y = gizliAltinlar[j].hedefY;
+                        index = j;
+                    }
+                }
+                    
+                if (x != konum.x || y != konum.y || index != -1)
+                {
+                    altin.altinMatris[y, x] = 1;
+                    gizliAltin.gizliAltinSayisi--;
+                    altin.altinSayisi++;
+                    gizliAltinlar.RemoveAt(index); 
+                }
+            }
+
+            gizliAltinlar.Clear();
+        }
+    }
+
+// --------------------------------------B_Oyuncu Classı----------------------------------------------
+
+class B_Oyuncusu : Oyuncu
+    {
+
+        public B_Oyuncusu(Altin altin, GizliAltin gizliAltin, List<List<Block>> grid, int konumY, int konumX)
+        {
+            this.oyuncuRengi = Color.Green;
+            this.hamleMaliyet = AnaForm.parametre.b_OyuncuHamleMaliyet;
+            this.hedefMaliyet = AnaForm.parametre.b_OyuncuHedefMaliyet;
+            this.altin = altin;
+            this.gizliAltin = gizliAltin;
+            this.grid = grid;
+            this.konum = (konumX, konumY);
+            this.hedef = (konumX, konumY);
+            this.oyuncuNumarasi = -2;
+            this.oyuncuIsmi = "B";
+        }
+
+        // B oyuncusuna ait hedef belirleme işlemi yazılmıştır
+        public override void hedefBelirle(List<Oyuncu> oyuncular)
+        {
+            List<(int hedefX, int hedefY, int maliyet)> hedefler;
+            hedefler = new List<(int hedefX, int hedefY, int maliyet)>();
+
+            for (int i = 0; i < AnaForm.parametre.boyutY; i++)
+            {
+                for (int j = 0; j < AnaForm.parametre.boyutX; j++)
+                {
+                    if (altin.altinMatris[i, j] == 1)
+                    {
+                        int deger = (Math.Abs(i - konum.y) + Math.Abs(j - konum.x)) * hamleMaliyet;
+                        hedefler.Add((j, i, altin.degerMatris[i, j] - deger));
+                    }
+                }
+            }
+
+            double enBuyuk = Double.NegativeInfinity;
+
+            foreach ((int hedefX, int hedefY, int deger) hedef in hedefler)
+            {
+                if (enBuyuk < hedef.deger)
+                {
+                    enBuyuk = hedef.deger;
+                    this.hedef = (hedef.hedefX, hedef.hedefY);
+                }
+            }
+
+            hedefler.Clear();
+        }
+    }
+
+// --------------------------------------A_Oyuncu Classı----------------------------------------------
+
+ class A_Oyuncusu : Oyuncu
+    {
+        public A_Oyuncusu(Altin altin, GizliAltin gizliAltin, List<List<Block>> grid, int konumY, int konumX)
+        {
+            this.oyuncuRengi = Color.Tomato;
+            this.altin = altin;
+            this.gizliAltin = gizliAltin;
+            this.grid = grid;
+            this.konum = (konumX, konumY);
+            this.hedef = (konumX, konumY);
+            this.hamleMaliyet = AnaForm.parametre.a_OyuncuHamleMaliyet;
+            this.hedefMaliyet = AnaForm.parametre.a_OyuncuHedefMaliyet;
+            this.oyuncuNumarasi = -1;
+            this.oyuncuIsmi = "A";
+        }
+        
+        // a oyuncusuna ait hedef belirleme işlemi yazılmıştır
+        public override void hedefBelirle(List<Oyuncu> oyuncular)
+        {
+            List<(int hedefX, int hedefY, double Uzaklik)> hedefler;
+            hedefler = new List<(int hedefX, int hedefY, double Uzaklik)>();
+
+            for (int i = 0; i < AnaForm.parametre.boyutY; i++)
+            {
+                for (int j = 0; j < AnaForm.parametre.boyutX; j++)
+                {
+                    if (altin.altinMatris[i, j] == 1)
+                    {
+                        hedefler.Add((j, i, Math.Sqrt(Math.Pow(Math.Abs(j - konum.x), 2) + 
+                                                      Math.Pow(Math.Abs(i - konum.y), 2))));
+                    }
+                }
+            }
+
+            double enKucuk = Double.PositiveInfinity;
+
+            foreach ((int hedefX, int hedefY, double Uzaklik) hedef in hedefler)
+            {
+                if (enKucuk > hedef.Uzaklik)
+                {
+                    enKucuk = hedef.Uzaklik;
+                    this.hedef = (hedef.hedefX, hedef.hedefY);
+                }
+            }
+
+            hedefler.Clear();
+        }
+    }
+
+// --------------------------------------Block_Oyuncu Classı----------------------------------------------
+
+class Block
+    {
+        public int x;
+        public int y;
+        public int width;
+        public int heigth;
+        public Rectangle rectangle;
+    }
+
+    // boyuları girildikten sonra oyun için oluşturulucak olan
+    // tabanda her biri block classı olarak oluşuturulur.
+
+// --------------------------------------Altin_Oyuncu Classı----------------------------------------------
+
+class Altin
+    {
+        public int altinSayisi;
+        public int[,] altinMatris;
+        public int[,] degerMatris;
+        protected Random random;
+
+        public Altin()
+        {
+            this.altinMatris = new int[AnaForm.parametre.boyutY, AnaForm.parametre.boyutX];
+            this.degerMatris = new int[AnaForm.parametre.boyutY, AnaForm.parametre.boyutX];
+            this.altinSayisi = AnaForm.parametre.boyutX * AnaForm.parametre.boyutY * AnaForm.parametre.altinOrani / 100;
+            this.random = new Random();
+
+            MatrisDoldur();
+            altinOlustur(altinSayisi);
+            AltinDegerOlustur(altinSayisi);
+        }
+
+        // Oyunda parametre olarak girilen boyutlardan oluşan bir matris hazırlanıp
+        // bu matrisin içinde altınlar rastgele yerleştirilip 1 rakamı konmaktadır.
+        // köşelere asla altın gelemez. Altınlarında degerleri random olarak verilmektedir.
+        public void altinOlustur(int altinSayisi)
+        {
+            int altinSayac = 0;
+
+            while (true)
+            {
+                int x = 0 + random.Next(AnaForm.parametre.boyutY);
+                int y = 0 + random.Next(AnaForm.parametre.boyutX);
+
+                if (altinMatris[x, y] == 1 || altinMatris[x, y] == -1 || altinMatris[x, y] == -2 ||
+                    altinMatris[x, y] == -3 || altinMatris[x, y] == -4)
+                {
+                    continue;
+                }
+
+                else if (altinSayac == altinSayisi)
+                {
+                    break;
+                }
+
+                else
+                {
+                    altinMatris[x, y] = 1;
+                    altinSayac++;
+                }
+            }
+        }
+
+        // Altınların degerlerinin random olarak verildiği kısımdır
+        private void AltinDegerOlustur(int altinSayisi)
+        {
+            int[] altinDegerleri = { 5, 10, 15, 20 };
+
+            for (int i = 0; i < AnaForm.parametre.boyutY; i++)
+            {
+                for (int j = 0; j < AnaForm.parametre.boyutX; j++)
+                {
+                    if (altinMatris[i, j] == 1)
+                    {
+                        degerMatris[i, j] = altinDegerleri[0 + random.Next(4)];
+                    }
+
+                    else
+                    {
+                        degerMatris[i, j] = 0;
+                    }
+                }
+            }
+        }
+
+        // köşelere altın gelmemesi için matrisi o şekilde doldurma işlevi görmektedir.
+        protected void MatrisDoldur()
+        {
+            for (int i = 0; i < AnaForm.parametre.boyutY; i++)
+            {
+                for (int j = 0; j < AnaForm.parametre.boyutX; j++)
+                {
+                    if (i == 0 && j == 0)
+                    {
+                        altinMatris[i, j] = -1;
+                    }
+
+                    else if (i == 0 && j == AnaForm.parametre.boyutX - 1)
+                    {
+                        altinMatris[i, j] = -2;
+                    }
+
+                    else if (i == AnaForm.parametre.boyutY - 1 && j == 0)
+                    {
+                        altinMatris[i, j] = -3;
+                    }
+
+                    else if (i == AnaForm.parametre.boyutX - 1 && j == AnaForm.parametre.boyutY - 1)
+                    {
+                        altinMatris[i, j] = -4;
+                    }
+
+                    else
+                    {
+                        altinMatris[i, j] = 0;
+                    }
+                }
+            }
+        }
+    }
+
+// --------------------------------------Proje Kaynak Kodları Bu kadar----------------------------------------------
